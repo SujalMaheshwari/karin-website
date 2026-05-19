@@ -5,51 +5,60 @@ import "./HowWeWork.css";
 
 export default function HowWeWork() {
   const [active, setActive] = useState(0);
-  const swipeStart = useRef(null);
+  const swipeStart  = useRef(null);
+  const swipeIntent = useRef(null); // "h" | "v" | null
   const total = HOW_WE_WORK.length;
 
   const prev = () => setActive((a) => (a - 1 + total) % total);
   const next = () => setActive((a) => (a + 1) % total);
 
-  const handlePointerDown = (event) => {
-    if (event.pointerType === "mouse" && event.button !== 0) return;
-
-    swipeStart.current = {
-      x: event.clientX,
-      y: event.clientY,
-    };
-
-    event.currentTarget.setPointerCapture?.(event.pointerId);
+  const handlePointerDown = (e) => {
+    if (e.pointerType === "mouse" && e.button !== 0) return;
+    swipeStart.current  = { x: e.clientX, y: e.clientY };
+    swipeIntent.current = null;
+    e.currentTarget.setPointerCapture?.(e.pointerId);
   };
 
-  const handlePointerUp = (event) => {
+  const handlePointerMove = (e) => {
     if (!swipeStart.current) return;
+    const dx = Math.abs(e.clientX - swipeStart.current.x);
+    const dy = Math.abs(e.clientY - swipeStart.current.y);
 
-    const deltaX = event.clientX - swipeStart.current.x;
-    const deltaY = event.clientY - swipeStart.current.y;
-
-    swipeStart.current = null;
-    event.currentTarget.releasePointerCapture?.(event.pointerId);
-
-    if (Math.abs(deltaX) < 45 || Math.abs(deltaX) < Math.abs(deltaY) * 1.2) {
-      return;
+    // Determine intent once we have enough movement
+    if (!swipeIntent.current && (dx > 6 || dy > 6)) {
+      swipeIntent.current = dx > dy ? "h" : "v";
     }
 
-    if (deltaX < 0) next();
+    // Only block scroll once we know it's horizontal
+    if (swipeIntent.current === "h") {
+      e.preventDefault();
+    }
+  };
+
+  const handlePointerUp = (e) => {
+    if (!swipeStart.current) return;
+    const dx = e.clientX - swipeStart.current.x;
+    const dy = e.clientY - swipeStart.current.y;
+    swipeStart.current  = null;
+    swipeIntent.current = null;
+    e.currentTarget.releasePointerCapture?.(e.pointerId);
+
+    if (Math.abs(dx) < 45 || Math.abs(dx) < Math.abs(dy) * 1.2) return;
+    if (dx < 0) next();
     else prev();
   };
 
-  const handlePointerCancel = (event) => {
-    swipeStart.current = null;
-    event.currentTarget.releasePointerCapture?.(event.pointerId);
+  const handlePointerCancel = (e) => {
+    swipeStart.current  = null;
+    swipeIntent.current = null;
+    e.currentTarget.releasePointerCapture?.(e.pointerId);
   };
 
-  /* Determine position relative to active */
   const getPos = (i) => {
     let diff = i - active;
     if (diff < -(total / 2)) diff += total;
-    if (diff > total / 2)  diff -= total;
-    return diff; // -2, -1, 0, 1, 2
+    if (diff > total / 2)    diff -= total;
+    return diff;
   };
 
   return (
@@ -70,23 +79,20 @@ export default function HowWeWork() {
 
         {/* ── CAROUSEL ── */}
         <div className="hww-carousel-wrap">
-          {/* Left arrow */}
-          <button className="hww-arrow hww-arrow-left" onClick={prev} aria-label="Previous">
-            ←
-          </button>
+          <button className="hww-arrow hww-arrow-left" onClick={prev} aria-label="Previous">←</button>
 
-          {/* Track */}
           <div
             className="hww-track"
             onPointerDown={handlePointerDown}
+            onPointerMove={handlePointerMove}
             onPointerUp={handlePointerUp}
             onPointerCancel={handlePointerCancel}
           >
             {HOW_WE_WORK.map((item, i) => {
-              const pos = getPos(i);
-              const isCenter = pos === 0;
+              const pos        = getPos(i);
+              const isCenter   = pos === 0;
               const isAdjacent = Math.abs(pos) === 1;
-              const isHidden = Math.abs(pos) > 1;
+              const isHidden   = Math.abs(pos) > 1;
 
               return (
                 <div
@@ -113,13 +119,9 @@ export default function HowWeWork() {
             })}
           </div>
 
-          {/* Right arrow */}
-          <button className="hww-arrow hww-arrow-right" onClick={next} aria-label="Next">
-            →
-          </button>
+          <button className="hww-arrow hww-arrow-right" onClick={next} aria-label="Next">→</button>
         </div>
 
-        {/* Dot indicators */}
         <div className="hww-dots">
           {HOW_WE_WORK.map((_, i) => (
             <button
@@ -130,6 +132,10 @@ export default function HowWeWork() {
             />
           ))}
         </div>
+
+        <p className="hww-swipe-hint">
+          <span>←</span> swipe to navigate <span>→</span>
+        </p>
       </section>
     </div>
   );

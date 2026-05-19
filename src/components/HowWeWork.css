@@ -194,7 +194,14 @@ body.light .hww-center {
   border-radius: 4px;
 }
 
-/* ── RESPONSIVE ── */
+/* ── SWIPE HINT (mobile only) ── */
+.hww-swipe-hint {
+  display: none;
+}
+
+/* ════════════════════════════════════
+   RESPONSIVE — TABLET
+════════════════════════════════════ */
 @media (max-width: 960px) {
   .hww-section { padding: 72px 24px; }
   .hww-sub { text-align: left; max-width: 100%; }
@@ -207,10 +214,58 @@ body.light .hww-center {
   .hww-arrow { width: 44px; height: 44px; font-size: 1rem; }
 }
 
+/* ════════════════════════════════════
+   RESPONSIVE — MOBILE
+════════════════════════════════════ */
 @media (max-width: 600px) {
-  .hww-track { height: 420px; }
-  .hww-card  { width: 260px; }
-  .hww-card-inner { padding: 32px 24px 40px; }
-  .hww-left  { transform: translateX(-240px) scale(0.8); }
-  .hww-right { transform: translateX(240px)  scale(0.8); }
+  .hww-section { padding: 60px 16px; }
+
+  /* Hide arrows — swipe replaces them */
+  .hww-arrow { display: none; }
+
+  /* Show swipe hint */
+  .hww-swipe-hint {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 16px;
+    font-size: 0.75rem;
+    color: var(--muted2);
+    opacity: 0.7;
+    letter-spacing: 0.06em;
+  }
+
+  .hww-carousel-wrap {
+    padding: 16px 0 24px;
+    /* Bleed out of section padding so track is wider than content */
+    margin-left: -16px;
+    margin-right: -16px;
+  }
+
+  /* Track: wider than viewport content, clips at body edge only */
+  .hww-track {
+    width: 100%;
+    height: 400px;
+    overflow: hidden;
+    touch-action: pan-y; /* allow vertical scroll, JS cancels when horizontal */
+  }
+
+  /* Card narrower than track so side cards are visible */
+  .hww-card {
+    width: 78%;
+    max-width: 290px;
+  }
+
+  .hww-card-inner { padding: 28px 22px 36px; }
+  .hww-title { font-size: 1.35rem; }
+
+  /* Side cards: close enough to peek into the wider track */
+  .hww-left  { transform: translateX(-84%) scale(0.85); opacity: 0.5; filter: blur(1px); }
+  .hww-right { transform: translateX(84%)  scale(0.85); opacity: 0.5; filter: blur(1px); }
+
+  .hww-hidden.hww-left  { transform: translateX(-170%) scale(0.7); }
+  .hww-hidden.hww-right { transform: translateX(170%)  scale(0.7); }
+
+  .hww-dots { margin-top: 20px; }
 }
