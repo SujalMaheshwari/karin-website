@@ -1,0 +1,115 @@
+.wk-bg {
+  background: var(--bg);
+  transition: background 0.5s;
+}
+
+.wk-section {
+  padding: 100px 48px;
+  max-width: 1240px;
+  margin: 0 auto;
+}
+
+.wk-sub {
+  font-size: 0.9rem;
+  color: var(--muted2);
+  line-height: 1.7;
+  text-align: right;
+  max-width: 220px;
+}
+
+/* ── GRID ── */
+.wk-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+/* ── CARD ── */
+.wk-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 36px 28px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.3s, transform 0.3s cubic-bezier(0.22,1,0.36,1),
+              box-shadow 0.3s, background 0.3s;
+}
+
+.wk-card::before {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0; height: 2px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s ease, background 0.4s;
+}
+
+.wk-card:hover {
+  border-color: var(--accent-border);
+  transform: translateY(-5px);
+  box-shadow: 0 16px 40px var(--accent-dim);
+}
+
+.wk-card:hover::before { transform: scaleX(1); }
+
+/* ── TOP ROW ── */
+.wk-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.wk-icon {
+  font-size: 1.5rem;
+  color: var(--accent);
+  transition: color 0.4s, transform 0.3s;
+  display: inline-block;
+}
+
+.wk-card:hover .wk-icon {
+  transform: rotate(8deg) scale(1.15);
+}
+
+.wk-metric {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  border: 1px solid var(--accent-border);
+  padding: 3px 10px;
+  border-radius: 100px;
+  white-space: nowrap;
+  transition: color 0.4s, border-color 0.4s;
+}
+
+/* ── CONTENT ── */
+.wk-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.25rem;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+
+.wk-desc {
+  font-size: 0.875rem;
+  color: var(--muted2);
+  line-height: 1.75;
+  flex: 1;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 960px) {
+  .wk-section { padding: 72px 24px; }
+  .wk-grid    { grid-template-columns: 1fr 1fr; }
+  .wk-sub     { text-align: left; max-width: 100%; }
+}
+
+@media (max-width: 480px) {
+  .wk-grid { grid-template-columns: 1fr; }
+}

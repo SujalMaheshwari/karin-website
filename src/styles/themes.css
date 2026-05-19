@@ -1,0 +1,67 @@
+/* ═══════════════════════════════════════════════════
+   KARIN PVT. LTD. — THEME VARIABLES
+   Dark  → lime-green  #c8f564
+   Light → sage green  #3d7a2a  + warm cream HIGH CONTRAST
+═══════════════════════════════════════════════════ */
+
+body.dark {
+  --accent:         #c8f564;
+  --accent2:        #a8d93e;
+  --accent-dim:     rgba(200, 245, 100, 0.09);
+  --accent-border:  rgba(200, 245, 100, 0.22);
+  --cursor-dot:     #c8f564;
+  --cursor-ring:    #c8f564;
+  --bg:             #0b0c0e;
+  --bg2:            #0e1018;
+  --surface:        #12151e;
+  --surface2:       #181c28;
+  --border:         rgba(255, 255, 255, 0.07);
+  --text:           #eef0f5;
+  --muted:          #525870;
+  --muted2:         #8892a4;
+  --card-bg:        #12151e;
+  --hero-grid:      rgba(200, 245, 100, 0.05);
+  --hero-glow:      rgba(200, 245, 100, 0.08);
+  --nav-blur-bg:    rgba(11, 12, 14, 0.92);
+  --btn-text:       #0b0c0e;
+  --stat-divider:   rgba(255, 255, 255, 0.07);
+  --avatar-text:    #0b0c0e;
+  --font-body:      'Outfit', sans-serif;
+  --pill-text:      var(--accent);
+  --pill-border:    var(--accent-border);
+  --label-color:    var(--muted);
+}
+
+body.light {
+  --accent:         #3d7a2a;
+  --accent2:        #2d6020;
+  --accent-dim:     rgba(61, 122, 42, 0.10);
+  --accent-border:  rgba(61, 122, 42, 0.30);
+  --cursor-dot:     #3d7a2a;
+  --cursor-ring:    #3d7a2a;
+
+  --bg:             #f5f2eb;
+  --bg2:            #ede9df;
+  --surface:        #fdfaf3;
+  --surface2:       #deeacc;
+  --border:         rgba(61, 122, 42, 0.18);
+
+  /* HIGH CONTRAST — all much darker now */
+  --text:           #111a09;
+  --muted:          #3d4d2e;
+  --muted2:         #2a3d1a;
+  --card-bg:        #fdfaf3;
+
+  --hero-grid:      rgba(61, 122, 42, 0.07);
+  --hero-glow:      rgba(61, 122, 42, 0.11);
+  --nav-blur-bg:    rgba(253, 250, 243, 0.94);
+  --btn-text:       #ffffff;
+  --stat-divider:   rgba(61, 122, 42, 0.20);
+  --avatar-text:    #ffffff;
+  --font-body:      'Inter', sans-serif;
+
+  /* Pills and labels — strong contrast */
+  --pill-text:      #1e3d10;
+  --pill-border:    rgba(61, 122, 42, 0.50);
+  --label-color:    #1e3d10;
+}

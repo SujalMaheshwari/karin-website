@@ -1,0 +1,127 @@
+.al-wrap {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  position: relative;
+  background: var(--bg);
+}
+
+.al-grid {
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(var(--hero-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--hero-grid) 1px, transparent 1px);
+  background-size: 64px 64px;
+  pointer-events: none;
+}
+
+.al-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 48px 44px;
+  width: 100%;
+  max-width: 420px;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.al-logo {
+  font-family: 'Playfair Display', serif;
+  font-weight: 900;
+  font-size: 2rem;
+  letter-spacing: -0.02em;
+  display: flex;
+  align-items: baseline;
+}
+.al-k    { color: var(--accent); }
+.al-rest { color: var(--text); }
+
+.al-subtitle {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-bottom: 24px;
+}
+
+/* form */
+.al-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.al-error {
+  background: rgba(239,68,68,0.08);
+  border: 1px solid rgba(239,68,68,0.25);
+  color: #f87171;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.74rem;
+  padding: 12px 14px;
+  border-radius: 2px;
+}
+
+.al-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.al-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.66rem;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.al-input {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.92rem;
+  padding: 12px 14px;
+  border-radius: 2px;
+  outline: none;
+  width: 100%;
+  transition: border-color 0.2s;
+}
+.al-input:focus { border-color: var(--accent); }
+
+.al-submit {
+  background: var(--accent);
+  color: var(--btn-text);
+  border: none;
+  padding: 14px;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.82rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  border-radius: 2px;
+  width: 100%;
+  margin-top: 4px;
+  transition: opacity 0.2s;
+}
+.al-submit:hover:not(:disabled) { opacity: 0.85; }
+.al-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.al-back {
+  margin-top: 20px;
+  font-family: 'DM Mono', monospace;
+  font-size: 0.68rem;
+  color: var(--muted);
+  text-decoration: none;
+  letter-spacing: 0.06em;
+  transition: color 0.2s;
+}
+.al-back:hover { color: var(--accent); }

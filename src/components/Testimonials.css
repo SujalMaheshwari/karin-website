@@ -1,0 +1,112 @@
+.testi-bg {
+  background: var(--bg);
+  transition: background 0.5s;
+}
+
+.testi-section {
+  padding: 100px 48px;
+  max-width: 1240px;
+  margin: 0 auto;
+}
+
+/* ── GRID — stretch makes all cards same height ── */
+.testi-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  align-items: stretch;
+  gap: 24px;
+}
+
+/* ── CARD ── */
+.testi-card {
+  height: 100%;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 40px 32px 36px;
+  position: relative;
+  transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.testi-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-5px);
+  box-shadow: 0 16px 48px var(--accent-dim);
+}
+
+/* ── QUOTE MARK ── */
+.testi-quote {
+  font-family: 'Georgia', 'Playfair Display', serif;
+  font-size: 5rem;
+  color: var(--accent);
+  line-height: 0.8;
+  opacity: 0.4;
+  transition: color 0.4s, opacity 0.3s;
+  user-select: none;
+  display: block;
+  margin-bottom: 16px;
+}
+
+.testi-card:hover .testi-quote { opacity: 0.7; }
+
+/* ── TEXT — flex:1 fills space so author always at bottom ── */
+.testi-text {
+  font-size: 0.93rem;
+  color: var(--muted2);
+  line-height: 1.8;
+  flex: 1;
+  font-style: italic;
+  margin-bottom: 24px;
+}
+
+/* ── AUTHOR always at bottom ── */
+.testi-author {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+  margin-top: auto;
+}
+
+.testi-avatar {
+  width: 46px; height: 46px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent2), var(--accent));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--avatar-text);
+  flex-shrink: 0;
+  transition: background 0.4s;
+}
+
+.testi-name {
+  font-weight: 600;
+  font-size: 0.92rem;
+  letter-spacing: -0.01em;
+}
+
+.testi-role {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.63rem;
+  color: var(--muted);
+  letter-spacing: 0.06em;
+  margin-top: 3px;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 960px) {
+  .testi-section { padding: 72px 24px; }
+  .testi-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .testi-card { height: auto; }
+}

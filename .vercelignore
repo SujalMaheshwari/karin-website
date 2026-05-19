@@ -1,0 +1,8 @@
+.env
+*.local
+node_modules
+server/.env
+server/node_modules
+dist
+vite-dev.log
+server.zip
