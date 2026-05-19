@@ -6,49 +6,60 @@ import "./HowWeWork.css";
 export default function HowWeWork() {
   const [active, setActive] = useState(0);
   const swipeStart = useRef(null);
+  const isSwiping  = useRef(false);
   const total = HOW_WE_WORK.length;
 
   const prev = () => setActive((a) => (a - 1 + total) % total);
   const next = () => setActive((a) => (a + 1) % total);
 
-  const handlePointerDown = (event) => {
-    if (event.pointerType === "mouse" && event.button !== 0) return;
-
-    swipeStart.current = {
-      x: event.clientX,
-      y: event.clientY,
-    };
-
-    event.currentTarget.setPointerCapture?.(event.pointerId);
+  /* ── Pointer / touch handling ── */
+  const handlePointerDown = (e) => {
+    swipeStart.current = { x: e.clientX, y: e.clientY };
+    isSwiping.current  = false;
+    e.currentTarget.setPointerCapture?.(e.pointerId);
   };
 
-  const handlePointerUp = (event) => {
+  const handlePointerMove = (e) => {
     if (!swipeStart.current) return;
+    const dx = e.clientX - swipeStart.current.x;
+    const dy = e.clientY - swipeStart.current.y;
 
-    const deltaX = event.clientX - swipeStart.current.x;
-    const deltaY = event.clientY - swipeStart.current.y;
-
-    swipeStart.current = null;
-    event.currentTarget.releasePointerCapture?.(event.pointerId);
-
-    if (Math.abs(deltaX) < 45 || Math.abs(deltaX) < Math.abs(deltaY) * 1.2) {
-      return;
+    // Once we know the intent, lock it
+    if (!isSwiping.current && Math.abs(dx) > 8) {
+      isSwiping.current = true;
     }
 
-    if (deltaX < 0) next();
+    // If horizontal swipe, stop the page from scrolling
+    if (isSwiping.current) {
+      e.preventDefault();
+    }
+  };
+
+  const handlePointerUp = (e) => {
+    if (!swipeStart.current) return;
+    const dx = e.clientX - swipeStart.current.x;
+    const dy = e.clientY - swipeStart.current.y;
+    swipeStart.current = null;
+    e.currentTarget.releasePointerCapture?.(e.pointerId);
+
+    // Ignore accidental taps or mostly-vertical drags
+    if (Math.abs(dx) < 45 || Math.abs(dx) < Math.abs(dy) * 1.2) return;
+
+    if (dx < 0) next();
     else prev();
   };
 
-  const handlePointerCancel = (event) => {
+  const handlePointerCancel = (e) => {
     swipeStart.current = null;
-    event.currentTarget.releasePointerCapture?.(event.pointerId);
+    isSwiping.current  = false;
+    e.currentTarget.releasePointerCapture?.(e.pointerId);
   };
 
   /* Determine position relative to active */
   const getPos = (i) => {
     let diff = i - active;
     if (diff < -(total / 2)) diff += total;
-    if (diff > total / 2)  diff -= total;
+    if (diff > total / 2)    diff -= total;
     return diff; // -2, -1, 0, 1, 2
   };
 
@@ -79,14 +90,15 @@ export default function HowWeWork() {
           <div
             className="hww-track"
             onPointerDown={handlePointerDown}
+            onPointerMove={handlePointerMove}
             onPointerUp={handlePointerUp}
             onPointerCancel={handlePointerCancel}
           >
             {HOW_WE_WORK.map((item, i) => {
               const pos = getPos(i);
-              const isCenter = pos === 0;
+              const isCenter   = pos === 0;
               const isAdjacent = Math.abs(pos) === 1;
-              const isHidden = Math.abs(pos) > 1;
+              const isHidden   = Math.abs(pos) > 1;
 
               return (
                 <div
@@ -130,6 +142,11 @@ export default function HowWeWork() {
             />
           ))}
         </div>
+
+        {/* Swipe hint — visible on mobile only via CSS */}
+        <p className="hww-swipe-hint">
+          <span>←</span> swipe to navigate <span>→</span>
+        </p>
       </section>
     </div>
   );
