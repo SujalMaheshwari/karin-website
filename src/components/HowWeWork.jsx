@@ -130,11 +130,6 @@ export default function HowWeWork() {
             />
           ))}
         </div>
-
-        {/* Swipe hint — only visible on mobile via CSS */}
-        <p className="hww-swipe-hint">
-          <span>←</span> swipe to navigate <span>→</span>
-        </p>
       </section>
     </div>
   );

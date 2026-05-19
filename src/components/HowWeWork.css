@@ -194,14 +194,7 @@ body.light .hww-center {
   border-radius: 4px;
 }
 
-/* ── SWIPE HINT (mobile only) ── */
-.hww-swipe-hint {
-  display: none;
-}
-
-/* ════════════════════════════════════
-   RESPONSIVE — TABLET
-════════════════════════════════════ */
+/* ── RESPONSIVE ── */
 @media (max-width: 960px) {
   .hww-section { padding: 72px 24px; }
   .hww-sub { text-align: left; max-width: 100%; }
@@ -214,59 +207,10 @@ body.light .hww-center {
   .hww-arrow { width: 44px; height: 44px; font-size: 1rem; }
 }
 
-/* ════════════════════════════════════
-   RESPONSIVE — MOBILE
-════════════════════════════════════ */
 @media (max-width: 600px) {
-  .hww-section { padding: 60px 0; }
-
-  /* Hide arrows — swipe replaces them */
-  .hww-arrow { display: none; }
-
-  /* Show swipe hint */
-  .hww-swipe-hint {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    margin-top: 16px;
-    font-size: 0.75rem;
-    color: var(--muted2);
-    opacity: 0.7;
-    letter-spacing: 0.06em;
-  }
-
-  /* carousel wrap: full width, no side padding eating into track */
-  .hww-carousel-wrap {
-    padding: 16px 0 24px;
-  }
-
-  /* track: full viewport width so side cards can peek in */
-  .hww-track {
-    width: 100vw;
-    height: auto;
-    min-height: 360px;
-    overflow: visible; /* let side cards peek */
-  }
-
-  /* card: narrower so side cards are visible on both sides */
-  .hww-card {
-    width: 76vw;
-    max-width: 300px;
-  }
-
-  .hww-card-inner { padding: 28px 22px 36px; }
-
-  .hww-title { font-size: 1.35rem; }
-
-  /* Side cards peek in from the edges */
-  .hww-left  { transform: translateX(-82vw) scale(0.85); opacity: 0.45; filter: blur(1.5px); }
-  .hww-right { transform: translateX(82vw)  scale(0.85); opacity: 0.45; filter: blur(1.5px); }
-
-  /* Hidden cards fully off screen */
-  .hww-hidden.hww-left  { transform: translateX(-160vw) scale(0.7); }
-  .hww-hidden.hww-right { transform: translateX(160vw)  scale(0.7); }
-
-  /* dots: give a bit more breathing room */
-  .hww-dots { margin-top: 20px; }
+  .hww-track { height: 420px; }
+  .hww-card  { width: 260px; }
+  .hww-card-inner { padding: 32px 24px 40px; }
+  .hww-left  { transform: translateX(-240px) scale(0.8); }
+  .hww-right { transform: translateX(240px)  scale(0.8); }
 }
