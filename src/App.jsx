@@ -1,5 +1,8 @@
 import { useState, useEffect } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { AnimatePresence, motion } from "framer-motion";
+
+import { useTheme } from "./hooks/useTheme.js";
 
 import Cursor        from "./components/Cursor.jsx";
 import LoadingScreen from "./components/LoadingScreen.jsx";
@@ -23,41 +26,63 @@ import AdminDashboard from "./pages/AdminDashboard.jsx";
 import CaseStudy      from "./pages/work/CaseStudy.jsx";
 import NotFound       from "./components/NotFound.jsx";
 
-function HomePage({ dark, setDark, toast }) {
+/* ── Page transition ── */
+const pageVariants = {
+  initial: { opacity: 0, y: 18 },
+  animate: { opacity: 1, y: 0,  transition: { duration: 0.48, ease: [0.22, 1, 0.36, 1] } },
+  exit:    { opacity: 0, y: -10, transition: { duration: 0.24, ease: "easeIn" } },
+};
+
+function Page({ children }) {
+  return (
+    <motion.div variants={pageVariants} initial="initial" animate="animate" exit="exit">
+      {children}
+    </motion.div>
+  );
+}
+
+function AnimatedRoutes({ dark, setDark, toast }) {
+  const location = useLocation();
   const scrollTo = (id) =>
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+
   return (
-    <>
-      <Navbar dark={dark} setDark={setDark} scrollTo={scrollTo} />
-      <main>
-        <Hero scrollTo={scrollTo} />
-        <Stats />
-        <Services />
-        <WhyKarin />
-        <Work />
-        <HowWeWork />
-        <Team />
-        <Testimonials />
-        <FAQ />
-        <Contact toast={toast} />
-      </main>
-      <Footer dark={dark} />
-    </>
+    <AnimatePresence mode="wait">
+      <Routes location={location} key={location.pathname}>
+
+        <Route path="/" element={
+          <Page>
+            <Navbar dark={dark} setDark={setDark} scrollTo={scrollTo} />
+            <main>
+              <Hero scrollTo={scrollTo} />
+              <Stats />
+              <Services />
+              <WhyKarin />
+              <Work />
+              <HowWeWork />
+              <Team />
+              <Testimonials />
+              <FAQ />
+              <Contact toast={toast} />
+            </main>
+            <Footer dark={dark} />
+          </Page>
+        } />
+
+        <Route path="/work/:id" element={<Page><CaseStudy /></Page>} />
+        <Route path="/admin"    element={<Page><AdminLogin toast={toast} /></Page>} />
+        <Route path="/admin/dashboard" element={<Page><AdminDashboard toast={toast} /></Page>} />
+        <Route path="*"         element={<Page><NotFound /></Page>} />
+
+      </Routes>
+    </AnimatePresence>
   );
 }
 
 export default function App() {
-  const [dark, setDark] = useState(() => {
-    try { const s = localStorage.getItem("karin_theme"); return s ? s === "dark" : true; }
-    catch { return true; }
-  });
+  const [dark, setDark] = useTheme();
   const [loaded, setLoaded] = useState(false);
-  const { toasts, toast } = useToast();
-
-  useEffect(() => {
-    document.body.className = dark ? "dark" : "light";
-    try { localStorage.setItem("karin_theme", dark ? "dark" : "light"); } catch {}
-  }, [dark]);
+  const { toasts, toast }   = useToast();
 
   useEffect(() => {
     document.title = "KARIN AI | Software Development Studio";
@@ -80,13 +105,7 @@ export default function App() {
       <Cursor />
       {!loaded && <LoadingScreen onDone={() => setLoaded(true)} />}
       <ToastContainer toasts={toasts} onRemove={() => {}} />
-      <Routes>
-        <Route path="/"                element={<HomePage dark={dark} setDark={setDark} toast={toast} />} />
-        <Route path="/work/:id"        element={<CaseStudy />} />
-        <Route path="/admin"           element={<AdminLogin toast={toast} />} />
-        <Route path="/admin/dashboard" element={<AdminDashboard toast={toast} />} />
-        <Route path="*"                element={<NotFound />} />
-      </Routes>
+      <AnimatedRoutes dark={dark} setDark={setDark} toast={toast} />
     </BrowserRouter>
   );
 }

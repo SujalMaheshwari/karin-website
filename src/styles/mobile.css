@@ -1,0 +1,233 @@
+/* ═══════════════════════════════════════════
+   KARIN — MOBILE RESPONSIVENESS
+   Breakpoints: 320px, 375px, 480px, 600px, 768px, 960px
+═══════════════════════════════════════════ */
+
+/* ── 960px — tablet and small laptop ── */
+@media (max-width: 960px) {
+
+  /* HERO */
+  .hero-wrap { padding: 0 24px; }
+  .hero-inner {
+    grid-template-columns: 1fr;
+    padding-top: 100px;
+    padding-bottom: 60px;
+    min-height: auto;
+    gap: 40px;
+  }
+  .hero-right { justify-content: center; }
+  .hero-visual { width: 320px; height: 320px; }
+  .hv-sphere { width: 130px; height: 130px; }
+  .hv-ring-1 { width: 200px; height: 200px; }
+  .hv-ring-2 { width: 256px; height: 256px; }
+  .hv-ring-3 { width: 305px; height: 305px; }
+  .hv-orbit  { width: 195px; height: 195px; }
+  .hv-chip   { font-size: 0.62rem; padding: 6px 12px; }
+  .hv-chip-3 { display: none; }
+  .hero-loc  { display: none; }
+
+  /* STATS */
+  .stats-wrap  { padding: 32px 24px; }
+  .stats-inner { grid-template-columns: repeat(2, 1fr); gap: 32px; }
+  .stat-item   { border-right: none; }
+
+  /* SERVICES */
+  .services-grid { grid-template-columns: 1fr 1fr; }
+
+  /* WORK */
+  .work-inner { padding: 72px 24px; }
+  .proj-row   {
+    grid-template-columns: 120px 1fr;
+    padding-right: 20px;
+  }
+  .proj-right { display: none; }
+
+  /* HOW WE WORK */
+  .hww-section { padding: 72px 24px; }
+  .hww-track   { height: 380px; }
+  .hww-card    { width: 280px; }
+  .hww-left    { transform: translateX(-300px) scale(0.85); }
+  .hww-right   { transform: translateX(300px) scale(0.85); }
+  .hww-arrow-left  { left: -14px; }
+  .hww-arrow-right { right: -14px; }
+  .hww-arrow   { width: 44px; height: 44px; font-size: 1rem; }
+  .hww-sub     { text-align: left; max-width: 100%; }
+
+  /* WHY KARIN */
+  .wk-section { padding: 72px 24px; }
+  .wk-grid    { grid-template-columns: 1fr 1fr; }
+  .wk-sub     { text-align: left; max-width: 100%; }
+
+  /* TEAM */
+  .team-section { padding: 72px 24px; }
+  .team-layout  { grid-template-columns: 1fr; gap: 24px; }
+  .team-tagline { text-align: left; max-width: 100%; }
+  .team-director-card { padding: 36px 28px; min-height: auto; }
+
+  /* TESTIMONIALS */
+  .testi-section { padding: 72px 24px; }
+  .testi-grid    { grid-template-columns: 1fr; gap: 16px; }
+  .testi-card    { height: auto; }
+
+  /* FAQ */
+  .faq-section  { padding: 72px 24px; }
+  .faq-question { padding: 20px; font-size: 0.95rem; }
+  .faq-answer p { padding: 0 20px 20px; padding-top: 16px; }
+
+  /* CONTACT */
+  .contact-inner { padding: 72px 24px; }
+  .contact-grid  { grid-template-columns: 1fr; gap: 40px; }
+
+  /* FOOTER */
+  footer { padding: 28px 24px; }
+
+  /* CASE STUDY */
+  .cs-topbar { padding: 14px 24px; }
+  .cs-hero   { padding: 100px 24px 48px; }
+  .cs-image-wrap { padding: 24px; }
+  .cs-content { padding: 0 24px 64px; }
+  .cs-section.cs-grid { grid-template-columns: 1fr; gap: 20px; }
+  .cs-stats { width: 100%; }
+  .cs-stat  { padding: 14px 20px; flex: 1; }
+  .cs-outcomes { grid-template-columns: 1fr; }
+  .cs-next-inner { padding: 24px; flex-direction: column; align-items: flex-start; gap: 16px; }
+}
+
+/* ── 768px — tablet portrait ── */
+@media (max-width: 768px) {
+
+  /* Prevent custom cursor on touch */
+  .cursor-dot, .cursor-ring { display: none !important; }
+
+  /* HERO sub text smaller */
+  .hero-sub { font-size: 0.95rem; }
+
+  /* SERVICES single col */
+  .services-grid { grid-template-columns: 1fr; }
+
+  /* WHY KARIN single col */
+  .wk-grid { grid-template-columns: 1fr; }
+
+  /* TEAM stats */
+  .team-stats-grid { grid-template-columns: 1fr 1fr; }
+
+  /* NAVBAR full fix */
+  nav { padding: 14px 20px; }
+  nav.scrolled { padding: 10px 20px; }
+
+  /* Admin dashboard */
+  .ad-header { padding: 0 20px; gap: 12px; }
+  .ad-username { display: none; }
+  .ad-stat-cards { grid-template-columns: 1fr 1fr; }
+  .ad-charts-grid { grid-template-columns: 1fr; }
+  .ad-body { grid-template-columns: 1fr; height: auto; }
+  .ad-sidebar { height: 45vh; }
+  .ad-main { padding: 20px; }
+
+  /* HOW WE WORK */
+  .hww-card { width: 260px; }
+  .hww-card-inner { padding: 28px 22px 36px; }
+  .hww-left  { transform: translateX(-240px) scale(0.82); }
+  .hww-right { transform: translateX(240px) scale(0.82); }
+}
+
+/* ── 600px — large phones ── */
+@media (max-width: 600px) {
+
+  /* Typography scale down */
+  .sec-title { font-size: 1.9rem; }
+  .hero-h1   { font-size: 2.8rem; }
+
+  /* Buttons stack */
+  .hero-btns { flex-direction: column; }
+  .btn-primary, .btn-ghost { text-align: center; width: 100%; }
+
+  /* Hero visual smaller */
+  .hero-visual { width: 260px; height: 260px; }
+  .hv-sphere   { width: 110px; height: 110px; }
+  .hv-chip-1   { top: 5%; right: 0; font-size: 0.58rem; }
+  .hv-chip-2   { bottom: 5%; left: 0; font-size: 0.58rem; }
+
+  /* Stats 2 col */
+  .stats-inner { grid-template-columns: 1fr 1fr; gap: 24px; }
+  .stat-val    { font-size: 2.2rem; }
+
+  /* How we work */
+  .hww-track  { height: 420px; }
+  .hww-card   { width: 88vw; max-width: 340px; }
+  .hww-left   { transform: translateX(-76vw) scale(0.78); }
+  .hww-right  { transform: translateX(76vw) scale(0.78); }
+  .hww-arrow  { width: 40px; height: 40px; font-size: 0.9rem; }
+  .hww-arrow-left  { left: 0; }
+  .hww-arrow-right { right: 0; }
+
+  /* Why Karin */
+  .wk-grid { grid-template-columns: 1fr; }
+
+  /* Work rows */
+  .proj-row  { grid-template-columns: 1fr; padding: 0; }
+  .proj-thumb { width: 100%; height: 160px; min-height: unset; }
+  .proj-info  { padding: 20px 16px; }
+  .proj-arrow { opacity: 1; transform: none; }
+
+  /* Team */
+  .team-stat-val { font-size: 2.2rem; }
+  .team-director-name { font-size: 1.5rem; }
+
+  /* Contact */
+  .big-email { font-size: 1.4rem; }
+
+  /* Case study */
+  .cs-title { font-size: 2.2rem; }
+  .cs-stats { flex-direction: column; width: 100%; }
+  .cs-stat  { border-right: none; border-bottom: 1px solid var(--border); }
+  .cs-stat:last-child { border-bottom: none; }
+
+  /* FAQ */
+  .faq-list { max-width: 100%; }
+
+  /* Admin */
+  .ad-stat-cards { grid-template-columns: 1fr; }
+  .ad-tabs { display: none; }
+}
+
+/* ── 480px — small phones ── */
+@media (max-width: 480px) {
+  .hero-h1   { font-size: 2.4rem; }
+  .sec-title { font-size: 1.75rem; }
+
+  .hero-visual { width: 220px; height: 220px; }
+  .hv-sphere   { width: 90px; height: 90px; }
+  .hv-ring-1   { width: 150px; height: 150px; }
+  .hv-ring-2   { width: 190px; height: 190px; }
+  .hv-ring-3   { display: none; }
+
+  .mobile-menu .mob-links a { font-size: 1.7rem; }
+
+  .cs-title    { font-size: 2rem; }
+  .cs-next-title { font-size: 1.4rem; }
+}
+
+/* ── 375px — iPhone SE ── */
+@media (max-width: 375px) {
+  .hero-h1    { font-size: 2.1rem; }
+  .stat-val   { font-size: 2rem; }
+  .hv-chip    { display: none; }
+
+  .team-stats-grid { grid-template-columns: 1fr 1fr; }
+  .team-stat-val   { font-size: 1.9rem; }
+
+  nav { padding: 12px 16px; }
+  section { padding: 60px 16px; }
+  .work-inner, .contact-inner, .hww-section,
+  .wk-section, .team-section, .testi-section,
+  .faq-section { padding-left: 16px; padding-right: 16px; }
+}
+
+/* ── 320px — smallest devices ── */
+@media (max-width: 320px) {
+  .hero-h1  { font-size: 1.9rem; }
+  .hero-sub { font-size: 0.88rem; }
+  .btn-primary, .btn-ghost { padding: 12px 20px; font-size: 0.72rem; }
+  .nav-cta  { padding: 8px 14px; font-size: 0.68rem; }
+}
