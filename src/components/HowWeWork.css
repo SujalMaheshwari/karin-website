@@ -1,271 +1,190 @@
-.hww-bg {
-  background: var(--bg2);
-  transition: background 0.5s;
-}
+.hww-bg { background: var(--bg2); transition: background 0.5s; }
 
-.hww-section {
-  padding: 100px 48px;
-  max-width: 1240px;
-  margin: 0 auto;
-}
+.hww-section { padding: 100px 48px; max-width: 1240px; margin: 0 auto; }
 
 .hww-sub {
-  font-size: 0.9rem;
-  color: var(--muted2);
-  line-height: 1.7;
-  text-align: right;
-  max-width: 280px;
+  font-size: 0.9rem; color: var(--muted2); line-height: 1.7;
+  text-align: right; max-width: 280px;
 }
 
 /* ════════════════════════════════════
-   CAROUSEL WRAPPER
+   DESKTOP CAROUSEL
 ════════════════════════════════════ */
 .hww-carousel-wrap {
   position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0;
+  display: flex; align-items: center; justify-content: center;
   padding: 20px 0 40px;
 }
 
-/* ── ARROWS ── */
 .hww-arrow {
-  position: absolute;
-  z-index: 10;
-  width: 52px; height: 52px;
-  border-radius: 50%;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  color: var(--text);
-  font-size: 1.2rem;
+  width: 52px; height: 52px; border-radius: 50%;
+  background: var(--surface); border: 1px solid var(--border);
+  color: var(--text); font-size: 1.2rem;
   display: flex; align-items: center; justify-content: center;
-  cursor: pointer;
+  cursor: pointer; flex-shrink: 0; user-select: none;
+  position: absolute; z-index: 10;
   transition: background 0.25s, border-color 0.25s,
-              transform 0.25s cubic-bezier(0.22,1,0.36,1),
-              box-shadow 0.25s;
-  flex-shrink: 0;
-  user-select: none;
+              transform 0.25s cubic-bezier(0.22,1,0.36,1), box-shadow 0.25s;
 }
-
 .hww-arrow:hover {
-  background: var(--accent);
-  color: var(--btn-text);
-  border-color: var(--accent);
-  transform: scale(1.08);
+  background: var(--accent); color: var(--btn-text);
+  border-color: var(--accent); transform: scale(1.08);
   box-shadow: 0 8px 24px var(--accent-dim);
 }
-
 .hww-arrow-left  { left: -28px; }
 .hww-arrow-right { right: -28px; }
 
-/* ── TRACK ── */
 .hww-track {
-  position: relative;
-  width: 100%;
-  height: 340px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  position: relative; width: 100%; height: 340px;
+  display: flex; align-items: center; justify-content: center;
   overflow: hidden;
-  touch-action: pan-y;
 }
 
-/* ── CARDS ── */
 .hww-card {
-  position: absolute;
-  width: 340px;
-  background: var(--card-bg);
-  border: 1px solid var(--border);
+  position: absolute; width: 340px;
+  background: var(--card-bg); border: 1px solid var(--border);
   transition:
-    transform  0.5s cubic-bezier(0.22, 1, 0.36, 1),
-    opacity    0.5s cubic-bezier(0.22, 1, 0.36, 1),
-    filter     0.5s cubic-bezier(0.22, 1, 0.36, 1),
-    box-shadow 0.5s cubic-bezier(0.22, 1, 0.36, 1),
-    z-index    0s;
+    transform  0.5s cubic-bezier(0.22,1,0.36,1),
+    opacity    0.5s cubic-bezier(0.22,1,0.36,1),
+    filter     0.5s cubic-bezier(0.22,1,0.36,1),
+    box-shadow 0.5s cubic-bezier(0.22,1,0.36,1);
 }
+.hww-card-inner { padding: 44px 36px 52px; display: flex; flex-direction: column; }
 
-.hww-card-inner {
-  padding: 44px 36px 52px;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-
-/* ── CENTER CARD ── */
 .hww-center {
-  transform: translateX(0) scale(1);
-  opacity: 1;
-  filter: none;
-  z-index: 4;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.15);
-  border-color: var(--accent-border);
+  transform: translateX(0) scale(1); opacity: 1; filter: none; z-index: 4;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.15); border-color: var(--accent-border);
+}
+body.light .hww-center { box-shadow: 0 20px 60px rgba(61,122,42,0.15); }
+.hww-center::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: var(--accent); transition: background 0.4s;
 }
 
-body.light .hww-center {
-  box-shadow: 0 20px 60px rgba(61,122,42,0.15);
-}
-
-/* ── ADJACENT CARDS ── */
-.hww-adjacent {
-  opacity: 0.6;
-  filter: blur(2px);
-  z-index: 2;
-}
-
+.hww-adjacent { opacity: 0.6; filter: blur(2px); z-index: 2; cursor: pointer !important; }
+.hww-adjacent:hover { opacity: 0.8; filter: blur(1px); }
 .hww-left  { transform: translateX(-380px) scale(0.88); }
 .hww-right { transform: translateX(380px)  scale(0.88); }
-
-/* ── HIDDEN CARDS ── */
-.hww-hidden {
-  opacity: 0;
-  filter: blur(6px);
-  pointer-events: none;
-  z-index: 0;
-}
-
+.hww-hidden { opacity: 0; filter: blur(6px); pointer-events: none; z-index: 0; }
 .hww-hidden.hww-left  { transform: translateX(-600px) scale(0.7); }
 .hww-hidden.hww-right { transform: translateX(600px)  scale(0.7); }
 
-/* Adjacent cards: click to navigate */
-.hww-adjacent { cursor: pointer !important; }
-.hww-adjacent:hover { opacity: 0.8; filter: blur(1px); }
-
 /* ── CARD CONTENT ── */
-.hww-top {
-  display: flex; align-items: flex-start;
-  justify-content: space-between; margin-bottom: 28px;
-}
-
-.hww-step {
-  font-family: 'DM Mono', monospace;
-  font-size: 0.65rem; letter-spacing: 0.18em;
-  color: var(--accent); transition: color 0.4s;
-}
-
-.hww-icon {
-  font-size: 1.8rem; color: var(--accent);
-  opacity: 0.2; transition: opacity 0.3s;
-  line-height: 1; display: inline-block;
-}
-
+.hww-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 28px; }
+.hww-step { font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 0.18em; color: var(--accent); transition: color 0.4s; }
+.hww-icon { font-size: 1.8rem; color: var(--accent); opacity: 0.2; transition: opacity 0.3s; line-height: 1; display: inline-block; }
 .hww-center .hww-icon { opacity: 0.7; }
-
-.hww-title {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.65rem; margin-bottom: 16px;
-  letter-spacing: -0.02em; line-height: 1.1;
-}
-
-.hww-desc {
-  font-size: 0.9rem; color: var(--muted2);
-  line-height: 1.8; flex: 1;
-}
-
-/* Accent top bar on center card */
-.hww-center::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0; height: 3px;
-  background: var(--accent);
-  transition: background 0.4s;
-}
+.hww-title { font-family: 'Playfair Display', serif; font-size: 1.65rem; margin-bottom: 16px; letter-spacing: -0.02em; line-height: 1.1; }
+.hww-desc  { font-size: 0.9rem; color: var(--muted2); line-height: 1.8; flex: 1; }
 
 /* ── DOTS ── */
-.hww-dots {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  margin-top: 8px;
-}
-
+.hww-dots { display: flex; justify-content: center; gap: 8px; margin-top: 8px; }
+.hww-dots-desktop { display: flex; }
 .hww-dot {
-  width: 8px; height: 8px;
-  border-radius: 50%;
-  background: var(--border);
-  border: none; cursor: pointer;
-  transition: background 0.3s, transform 0.3s, width 0.3s;
-  padding: 0;
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--border); border: none; cursor: pointer;
+  transition: background 0.3s, width 0.3s; padding: 0;
 }
-
-.hww-dot-active {
-  background: var(--accent);
-  width: 24px;
-  border-radius: 4px;
-}
-
-/* ── SWIPE HINT (mobile only) ── */
-.hww-swipe-hint {
-  display: none;
-}
+.hww-dot-active { background: var(--accent); width: 24px; border-radius: 4px; }
 
 /* ════════════════════════════════════
-   RESPONSIVE — TABLET
+   MOBILE SLIDER — hidden on desktop
 ════════════════════════════════════ */
+.hww-mobile { display: none; }
+
 @media (max-width: 960px) {
   .hww-section { padding: 72px 24px; }
   .hww-sub { text-align: left; max-width: 100%; }
-  .hww-track { height: 380px; }
-  .hww-card  { width: 280px; }
-  .hww-left  { transform: translateX(-300px) scale(0.85); }
-  .hww-right { transform: translateX(300px)  scale(0.85); }
-  .hww-arrow-left  { left: -16px; }
-  .hww-arrow-right { right: -16px; }
-  .hww-arrow { width: 44px; height: 44px; font-size: 1rem; }
+
+  /* Hide desktop */
+  .hww-carousel-wrap { display: none; }
+  .hww-dots-desktop  { display: none; }
+
+  /* Show mobile */
+  .hww-mobile { display: block; }
+
+  /* Viewport — clips with padding so side cards peek */
+  .hww-mob-viewport {
+    overflow: hidden;
+    /* Extra padding on sides reveals ~15% of neighbouring cards */
+    padding: 12px 10% 12px;
+    margin: 0 -24px;             /* bleed to screen edge */
+    cursor: grab;
+    user-select: none;
+  }
+  .hww-mob-viewport:active { cursor: grabbing; }
+
+  /* Track — holds all cards side by side */
+  .hww-mob-track {
+    display: flex;
+    gap: 16px;
+    will-change: transform;
+  }
+
+  /* Each card — takes 80vw so sides peek */
+  .hww-mob-card {
+    flex: 0 0 80vw;
+    max-width: 340px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-top: 3px solid transparent;
+    padding: 32px 24px 40px;
+    border-radius: 2px;
+    opacity: 0.55;
+    filter: blur(1.5px);
+    transform: scale(0.95);
+    transition: opacity 0.35s ease, filter 0.35s ease,
+                transform 0.35s ease, border-color 0.35s ease;
+    pointer-events: none;
+  }
+
+  /* Active card is fully visible */
+  .hww-mob-card.hww-mob-active {
+    opacity: 1;
+    filter: none;
+    transform: scale(1);
+    border-top-color: var(--accent);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+    pointer-events: auto;
+  }
+  body.light .hww-mob-card.hww-mob-active {
+    box-shadow: 0 12px 40px rgba(61,122,42,0.12);
+  }
+
+  /* Bottom nav row */
+  .hww-mob-bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  /* Dot strip — draggable */
+  .hww-mob-dots {
+    cursor: ew-resize;
+    padding: 8px 12px;
+    border-radius: 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    gap: 10px;
+  }
+
+  .hww-swipe-hint {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
 }
 
-/* ════════════════════════════════════
-   RESPONSIVE — MOBILE
-════════════════════════════════════ */
 @media (max-width: 600px) {
-  .hww-section { padding: 60px 16px; }
+  .hww-mob-card { flex: 0 0 82vw; padding: 28px 20px 36px; }
+  .hww-title    { font-size: 1.45rem; }
+}
 
-  /* Hide arrows — swipe replaces them */
-  .hww-arrow { display: none; }
-
-  /* Show swipe hint */
-  .hww-swipe-hint {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    margin-top: 16px;
-    font-size: 0.75rem;
-    color: var(--muted2);
-    opacity: 0.7;
-    letter-spacing: 0.06em;
-  }
-
-  .hww-carousel-wrap {
-    padding: 16px 0 24px;
-    /* Bleed out of section padding so track is wider than content */
-    margin-left: -16px;
-    margin-right: -16px;
-  }
-
-  /* Track: wider than viewport content, clips at body edge only */
-  .hww-track {
-    width: 100%;
-    height: 400px;
-    overflow: hidden;
-    touch-action: pan-y; /* allow vertical scroll, JS cancels when horizontal */
-  }
-
-  /* Card narrower than track so side cards are visible */
-  .hww-card {
-    width: 78%;
-    max-width: 290px;
-  }
-
-  .hww-card-inner { padding: 28px 22px 36px; }
-  .hww-title { font-size: 1.35rem; }
-
-  /* Side cards: close enough to peek into the wider track */
-  .hww-left  { transform: translateX(-84%) scale(0.85); opacity: 0.5; filter: blur(1px); }
-  .hww-right { transform: translateX(84%)  scale(0.85); opacity: 0.5; filter: blur(1px); }
-
-  .hww-hidden.hww-left  { transform: translateX(-170%) scale(0.7); }
-  .hww-hidden.hww-right { transform: translateX(170%)  scale(0.7); }
-
-  .hww-dots { margin-top: 20px; }
+@media (max-width: 375px) {
+  .hww-mob-card { flex: 0 0 88vw; }
+  .hww-mob-viewport { padding: 12px 6% 12px; }
 }
