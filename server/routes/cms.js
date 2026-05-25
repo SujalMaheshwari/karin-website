@@ -3,6 +3,8 @@ import Service from "../models/Service.js";
 import Project from "../models/Project.js";
 import TeamMember from "../models/TeamMember.js";
 import { protect } from "../middleware/auth.js";
+import Testimonial from "../models/Testimonial.js";
+import Faq from "../models/Faq.js";
 
 const router = express.Router();
 
@@ -10,6 +12,8 @@ const resources = {
   services: Service,
   projects: Project,
   team: TeamMember,
+  testimonials: Testimonial,
+  faqs: Faq,
 };
 
 const listSort = { order: 1, createdAt: 1 };
@@ -67,6 +71,27 @@ const pickPayload = (resource, body) => {
     };
   }
 
+  if (resource === "testimonials") {
+    return {
+      quote: body.quote,
+      name: body.name,
+      role: body.role,
+      company: body.company,
+      initial: body.initial || String(body.name || "").split(" ").map((p) => p[0]).join("").slice(0, 3),
+      order: Number(body.order || 0),
+      visible: body.visible !== false,
+    };
+  }
+
+  if (resource === "faqs") {
+    return {
+      q: body.q,
+      a: body.a,
+      order: Number(body.order || 0),
+      visible: body.visible !== false,
+    };
+  }
+
   return {
     name: body.name,
     role: body.role,
@@ -83,15 +108,17 @@ const getModel = (resource) => resources[resource];
 router.get("/", async (_req, res) => {
   try {
     const visible = { visible: { $ne: false } };
-    const [services, projects, team] = await Promise.all([
+    const [services, projects, team, testimonials, faqs] = await Promise.all([
       Service.find(visible).sort(listSort).lean(),
       Project.find(visible).sort(listSort).lean(),
       TeamMember.find(visible).sort(listSort).lean(),
+      Testimonial.find(visible).sort(listSort).lean(),
+      Faq.find(visible).sort(listSort).lean(),
     ]);
 
     res.json({
       success: true,
-      data: { services, projects, team },
+      data: { services, projects, team, testimonials, faqs },
     });
   } catch (err) {
     console.error("CMS fetch error:", err);

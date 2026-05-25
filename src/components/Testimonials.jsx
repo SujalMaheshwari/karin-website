@@ -1,8 +1,11 @@
-import { TESTIMONIALS } from "../data/index.js";
+import { useSiteContent } from "../hooks/useSiteContent.js";
 import Reveal from "./Reveal.jsx";
 import "./Testimonials.css";
 
 export default function Testimonials() {
+  const { content } = useSiteContent();
+  const testimonials = content.testimonials;
+
   return (
     <div className="testi-bg">
       <section id="testimonials" className="testi-section">
@@ -16,10 +19,9 @@ export default function Testimonials() {
         </Reveal>
 
         <div className="testi-grid">
-          {TESTIMONIALS.map((t, i) => (
-            <Reveal key={t.name} delay={i * 0.1}>
+          {testimonials.map((t, i) => (
+            <Reveal key={t._id || t.name} delay={i * 0.1}>
               <div className="testi-card">
-                {/* Single proper opening double-quote character */}
                 <span className="testi-quote">&ldquo;</span>
                 <p className="testi-text">{t.quote}</p>
                 <div className="testi-author">

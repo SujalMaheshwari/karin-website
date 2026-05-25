@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { SERVICES, PROJECTS, TEAM } from "../data/index.js";
 import { CASE_STUDIES } from "../data/caseStudies.js";
 import { getCmsContent } from "../services/cms.js";
+import { TESTIMONIALS, FAQS } from "../data/index.js";
 
 const projectMedia = new Map(
   CASE_STUDIES.map((study) => [study.id, study])
@@ -37,6 +38,8 @@ export const FALLBACK_CONTENT = {
     withProjectFallbackMedia({ ...project, slug: project.id, order: index, visible: true })
   ),
   team: TEAM.map((member, index) => ({ ...member, order: index, visible: true })),
+  testimonials: TESTIMONIALS.map((t, index) => ({ ...t, order: index, visible: true })),
+  faqs: FAQS.map((f, index) => ({ ...f, order: index, visible: true })),
 };
 
 export const normalizeContent = (data = {}) => {
@@ -44,8 +47,10 @@ export const normalizeContent = (data = {}) => {
   const projects = normalizeList(data.projects?.length ? data.projects : FALLBACK_CONTENT.projects)
     .map(withProjectFallbackMedia);
   const team = normalizeList(data.team?.length ? data.team : FALLBACK_CONTENT.team);
+  const testimonials = normalizeList(data.testimonials?.length ? data.testimonials : FALLBACK_CONTENT.testimonials);
+  const faqs = normalizeList(data.faqs?.length ? data.faqs : FALLBACK_CONTENT.faqs);
 
-  return { services, projects, team };
+  return { services, projects, team, testimonials, faqs };
 };
 
 export function useSiteContent() {

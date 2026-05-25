@@ -1,9 +1,11 @@
 import { useState } from "react";
-import { FAQS } from "../data/index.js";
+import { useSiteContent } from "../hooks/useSiteContent.js";
 import Reveal from "./Reveal.jsx";
 import "./FAQ.css";
 
 export default function FAQ() {
+  const { content } = useSiteContent();
+  const faqs = content.faqs;
   const [open, setOpen] = useState(null);
 
   const toggle = (i) => setOpen(open === i ? null : i);
@@ -21,8 +23,8 @@ export default function FAQ() {
         </Reveal>
 
         <div className="faq-list">
-          {FAQS.map((item, i) => (
-            <Reveal key={i} delay={i * 0.06}>
+          {faqs.map((item, i) => (
+            <Reveal key={item._id || i} delay={i * 0.06}>
               <div
                 className={`faq-item ${open === i ? "open" : ""}`}
                 onClick={() => toggle(i)}

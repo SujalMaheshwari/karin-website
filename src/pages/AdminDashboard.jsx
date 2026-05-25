@@ -11,12 +11,14 @@ import { createCmsItem, deleteCmsItem, getCmsResource, updateCmsItem } from "../
 import { FALLBACK_CONTENT, normalizeContent } from "../hooks/useSiteContent.js";
 import "./AdminDashboard.css";
 
-const CMS_RESOURCES = ["services", "projects", "team"];
+const CMS_RESOURCES = ["services", "projects", "team", "testimonials", "faqs"];
 
 const RESOURCE_LABELS = {
   services: "Services",
   projects: "Projects",
   team: "Team",
+  testimonials: "Testimonials",
+  faqs: "FAQs",
 };
 
 const emptyForms = {
@@ -56,6 +58,21 @@ const emptyForms = {
     bio: "",
     initial: "",
     image: "",
+    order: 0,
+    visible: true,
+  },
+  testimonials: {
+    quote: "",
+    name: "",
+    role: "",
+    company: "",
+    initial: "",
+    order: 0,
+    visible: true,
+  },
+  faqs: {
+    q: "",
+    a: "",
     order: 0,
     visible: true,
   },
@@ -122,6 +139,22 @@ const toForm = (resource, item = {}) => {
     };
   }
 
+  if (resource === "testimonials") {
+    return {
+      ...base,
+      ...item,
+      visible: item.visible !== false,
+    };
+  }
+
+  if (resource === "faqs") {
+    return {
+      ...base,
+      ...item,
+      visible: item.visible !== false,
+    };
+  }
+
   return {
     ...base,
     ...item,
@@ -146,6 +179,23 @@ const serializeForm = (resource, form) => {
       tags: splitComma(form.tags),
       goals: splitLines(form.goals),
       outcomes: splitLines(form.outcomes),
+      order: Number(form.order || 0),
+      visible: Boolean(form.visible),
+    };
+  }
+
+  if (resource === "testimonials") {
+    return {
+      ...form,
+      initial: form.initial || form.name.split(" ").map((p) => p[0]).join("").slice(0, 3),
+      order: Number(form.order || 0),
+      visible: Boolean(form.visible),
+    };
+  }
+
+  if (resource === "faqs") {
+    return {
+      ...form,
       order: Number(form.order || 0),
       visible: Boolean(form.visible),
     };
@@ -738,6 +788,52 @@ export default function AdminDashboard({ toast }) {
                   <label>
                     Display Order
                     <input type="number" value={form.order} onChange={(event) => updateForm("order", event.target.value)} />
+                  </label>
+                </div>
+              )}
+
+              {activeResource === "testimonials" && (
+                <div className="ad-form-grid">
+                  <label className="span-2">
+                    Quote
+                    <textarea value={form.quote} onChange={(e) => updateForm("quote", e.target.value)} required rows={4} />
+                  </label>
+                  <label>
+                    Name
+                    <input value={form.name} onChange={(e) => updateForm("name", e.target.value)} required />
+                  </label>
+                  <label>
+                    Initials
+                    <input value={form.initial} onChange={(e) => updateForm("initial", e.target.value)} />
+                  </label>
+                  <label>
+                    Role
+                    <input value={form.role} onChange={(e) => updateForm("role", e.target.value)} required />
+                  </label>
+                  <label>
+                    Company
+                    <input value={form.company} onChange={(e) => updateForm("company", e.target.value)} required />
+                  </label>
+                  <label>
+                    Display Order
+                    <input type="number" value={form.order} onChange={(e) => updateForm("order", e.target.value)} />
+                  </label>
+                </div>
+              )}
+
+              {activeResource === "faqs" && (
+                <div className="ad-form-grid">
+                  <label className="span-2">
+                    Question
+                    <input value={form.q} onChange={(e) => updateForm("q", e.target.value)} required />
+                  </label>
+                  <label className="span-2">
+                    Answer
+                    <textarea value={form.a} onChange={(e) => updateForm("a", e.target.value)} required rows={5} />
+                  </label>
+                  <label>
+                    Display Order
+                    <input type="number" value={form.order} onChange={(e) => updateForm("order", e.target.value)} />
                   </label>
                 </div>
               )}
