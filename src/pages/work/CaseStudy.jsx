@@ -3,10 +3,88 @@ import { useEffect } from "react";
 import { getCaseStudy, CASE_STUDIES } from "../../data/caseStudies.js";
 import "./CaseStudy.css";
 
-export default function CaseStudy() {
+const toYouTubeEmbed = (url) => {
+  const match = String(url).match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&?/]+)/i);
+  if (!match) return null;
+  const videoId = match[1];
+  return `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}&controls=0&playsinline=1&modestbranding=1`;
+};
+
+const toVimeoEmbed = (url) => {
+  const match = String(url).match(/vimeo\.com\/(?:video\/)?(\d+)/i);
+  if (!match) return null;
+  return `https://player.vimeo.com/video/${match[1]}?autoplay=1&muted=1&loop=1&background=1`;
+};
+
+function DemoMedia({ study }) {
+  const embedUrl = study.videoUrl && (toYouTubeEmbed(study.videoUrl) || toVimeoEmbed(study.videoUrl));
+
+  if (embedUrl) {
+    return (
+      <iframe
+        src={embedUrl}
+        title={`${study.title} demo video`}
+        className="cs-project-video"
+        loading="lazy"
+        allow="autoplay; encrypted-media; picture-in-picture"
+      />
+    );
+  }
+
+  if (study.videoUrl) {
+    return (
+      <video
+        src={study.videoUrl}
+        poster={study.image}
+        className="cs-project-video"
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="metadata"
+      />
+    );
+  }
+
+  if (!study.image) {
+    return <div className="cs-project-empty">{study.title}</div>;
+  }
+
+  return (
+    <img
+      src={study.image}
+      alt={study.imageAlt}
+      className="cs-project-image"
+      loading="lazy"
+    />
+  );
+}
+
+const mergeStudy = (project, fallback) => {
+  if (!project) return fallback;
+  return {
+    ...fallback,
+    ...project,
+    id: project.slug || project.id || fallback?.id,
+    stack: project.stack || project.tags || fallback?.stack || [],
+    summary: project.summary || project.desc || fallback?.summary || "",
+    duration: project.duration || fallback?.duration || "",
+    image: project.image || fallback?.image,
+    imageAlt: project.imageAlt || fallback?.imageAlt || project.title,
+    goals: project.goals?.length ? project.goals : fallback?.goals || [],
+    outcomes: project.outcomes?.length ? project.outcomes : fallback?.outcomes || [],
+    problem: project.problem || fallback?.problem || "",
+    approach: project.approach || fallback?.approach || "",
+    challenges: project.challenges || fallback?.challenges || "",
+  };
+};
+
+export default function CaseStudy({ projects = [] }) {
   const { id }   = useParams();
   const navigate = useNavigate();
-  const study    = getCaseStudy(id);
+  const project  = projects.find((item) => [item.slug, item.id, item._id].includes(id));
+  const fallback = getCaseStudy(id) || getCaseStudy(project?.id);
+  const study    = mergeStudy(project, fallback);
 
   useEffect(() => { window.scrollTo(0, 0); }, [id]);
 
@@ -19,8 +97,10 @@ export default function CaseStudy() {
     );
   }
 
-  const currentIndex = CASE_STUDIES.findIndex((c) => c.id === id);
-  const next         = CASE_STUDIES[(currentIndex + 1) % CASE_STUDIES.length];
+  const projectList = projects.length ? projects : CASE_STUDIES;
+  const currentIndex = Math.max(0, projectList.findIndex((item) => [item.slug, item.id, item._id].includes(id)));
+  const nextRaw = projectList[(currentIndex + 1) % projectList.length];
+  const next = mergeStudy(nextRaw, getCaseStudy(nextRaw?.slug || nextRaw?.id));
 
   return (
     <div className="cs-page">
@@ -67,12 +147,7 @@ export default function CaseStudy() {
       {/* ── PROJECT IMAGE ── */}
       <div className="cs-image-wrap">
         <div className="cs-image-inner">
-          <img
-            src={study.image}
-            alt={study.imageAlt}
-            className="cs-project-image"
-            loading="lazy"
-          />
+          <DemoMedia study={study} />
           <div className="cs-image-caption"
             style={{ borderColor: study.color }}>
             <span className="cs-image-dot" style={{ background: study.color }} />

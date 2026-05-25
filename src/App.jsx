@@ -1,10 +1,10 @@
-import { useState, useEffect } from "react";
+import { lazy, Suspense, useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 
 import { useTheme } from "./hooks/useTheme.js";
+import { useSiteContent } from "./hooks/useSiteContent.js";
 
-import Cursor        from "./components/Cursor.jsx";
 import LoadingScreen from "./components/LoadingScreen.jsx";
 import { ToastContainer, useToast } from "./components/Toast.jsx";
 
@@ -21,10 +21,10 @@ import FAQ           from "./components/FAQ.jsx";
 import Contact       from "./components/Contact.jsx";
 import Footer        from "./components/Footer.jsx";
 
-import AdminLogin     from "./pages/AdminLogin.jsx";
-import AdminDashboard from "./pages/AdminDashboard.jsx";
-import CaseStudy      from "./pages/work/CaseStudy.jsx";
-import NotFound       from "./components/NotFound.jsx";
+const AdminLogin = lazy(() => import("./pages/AdminLogin.jsx"));
+const AdminDashboard = lazy(() => import("./pages/AdminDashboard.jsx"));
+const CaseStudy = lazy(() => import("./pages/work/CaseStudy.jsx"));
+const NotFound = lazy(() => import("./components/NotFound.jsx"));
 
 /* ── Page transition ── */
 const pageVariants = {
@@ -41,7 +41,11 @@ function Page({ children }) {
   );
 }
 
-function AnimatedRoutes({ dark, setDark, toast }) {
+function RouteFallback() {
+  return <div className="route-fallback">Loading...</div>;
+}
+
+function AnimatedRoutes({ dark, setDark, toast, content, contentLoading }) {
   const location = useLocation();
   const scrollTo = (id) =>
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
@@ -56,11 +60,11 @@ function AnimatedRoutes({ dark, setDark, toast }) {
             <main>
               <Hero scrollTo={scrollTo} />
               <Stats />
-              <Services />
+              <Services services={content.services} loading={contentLoading} />
               <WhyKarin />
-              <Work />
+              <Work projects={content.projects} loading={contentLoading} />
               <HowWeWork />
-              <Team />
+              <Team team={content.team} />
               <Testimonials />
               <FAQ />
               <Contact toast={toast} />
@@ -69,10 +73,10 @@ function AnimatedRoutes({ dark, setDark, toast }) {
           </Page>
         } />
 
-        <Route path="/work/:id" element={<Page><CaseStudy /></Page>} />
-        <Route path="/admin"    element={<Page><AdminLogin toast={toast} /></Page>} />
-        <Route path="/admin/dashboard" element={<Page><AdminDashboard toast={toast} /></Page>} />
-        <Route path="*"         element={<Page><NotFound /></Page>} />
+        <Route path="/work/:id" element={<Page><Suspense fallback={<RouteFallback />}><CaseStudy projects={content.projects} /></Suspense></Page>} />
+        <Route path="/admin"    element={<Page><Suspense fallback={<RouteFallback />}><AdminLogin toast={toast} /></Suspense></Page>} />
+        <Route path="/admin/dashboard" element={<Page><Suspense fallback={<RouteFallback />}><AdminDashboard toast={toast} /></Suspense></Page>} />
+        <Route path="*"         element={<Page><Suspense fallback={<RouteFallback />}><NotFound /></Suspense></Page>} />
 
       </Routes>
     </AnimatePresence>
@@ -83,6 +87,7 @@ export default function App() {
   const [dark, setDark] = useTheme();
   const [loaded, setLoaded] = useState(false);
   const { toasts, toast }   = useToast();
+  const { content, loading: contentLoading } = useSiteContent();
 
   useEffect(() => {
     document.title = "KARIN AI | Software Development Studio";
@@ -102,10 +107,15 @@ export default function App() {
 
   return (
     <BrowserRouter>
-      <Cursor />
       {!loaded && <LoadingScreen onDone={() => setLoaded(true)} />}
       <ToastContainer toasts={toasts} onRemove={() => {}} />
-      <AnimatedRoutes dark={dark} setDark={setDark} toast={toast} />
+      <AnimatedRoutes
+        dark={dark}
+        setDark={setDark}
+        toast={toast}
+        content={content}
+        contentLoading={contentLoading}
+      />
     </BrowserRouter>
   );
 }

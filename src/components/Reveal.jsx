@@ -1,28 +1,18 @@
-import { useReveal } from "../hooks/useReveal";
+import { motion, useReducedMotion } from "framer-motion";
 
-/**
- * Reveal — wraps children in a fade-up scroll animation.
- * Props:
- *   delay    (number) — animation delay in seconds
- *   className (string)
- *   style    (object)
- */
 export default function Reveal({ children, delay = 0, className = "", style = {} }) {
-  const [ref, visible] = useReveal();
+  const reduceMotion = useReducedMotion();
 
   return (
-    <div
-      ref={ref}
+    <motion.div
       className={className}
-      style={{
-        opacity: visible ? 1 : 0,
-        transform: visible ? "translateY(0)" : "translateY(28px)",
-        transition: `opacity 0.72s ${delay}s cubic-bezier(0.22,1,0.36,1),
-                     transform 0.72s ${delay}s cubic-bezier(0.22,1,0.36,1)`,
-        ...style,
-      }}
+      style={style}
+      initial={reduceMotion ? false : { opacity: 0, y: 54, scale: 0.98, filter: "blur(10px)" }}
+      whileInView={reduceMotion ? undefined : { opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
+      viewport={{ once: false, amount: 0.22, margin: "0px 0px -80px 0px" }}
+      transition={{ duration: 0.8, delay, ease: [0.16, 1, 0.3, 1] }}
     >
       {children}
-    </div>
+    </motion.div>
   );
 }

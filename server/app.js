@@ -4,6 +4,7 @@ import rateLimit from "express-rate-limit";
 
 import contactRoutes from "./routes/contact.js";
 import authRoutes from "./routes/auth.js";
+import cmsRoutes from "./routes/cms.js";
 
 const app = express();
 
@@ -12,7 +13,7 @@ app.use(cors({
   credentials: true,
 }));
 
-app.use(express.json({ limit: "10kb" }));
+app.use(express.json({ limit: "25mb" }));
 app.use(express.urlencoded({ extended: true }));
 
 app.use(rateLimit({
@@ -24,6 +25,7 @@ app.use(rateLimit({
 
 app.use("/api/contact", contactRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/cms", cmsRoutes);
 
 app.get("/api/health", (_, res) => {
   res.json({

@@ -20,7 +20,7 @@
 
 .faq-item {
   background: var(--card-bg);
-  cursor: none;
+  cursor: pointer;
   transition: background 0.25s;
   overflow: hidden;
 }

@@ -90,10 +90,13 @@
   gap: 16px;
 }
 
-.cs-project-image {
+.cs-project-image,
+.cs-project-video,
+.cs-project-empty {
   width: 100%;
   height: auto;
   max-height: 600px;
+  min-height: 320px;
   object-fit: cover;
   object-position: top;
   border-radius: 4px;
@@ -103,7 +106,29 @@
   transition: transform 0.4s cubic-bezier(0.22,1,0.36,1);
 }
 
-.cs-project-image:hover {
+.cs-project-video {
+  aspect-ratio: 16 / 9;
+  height: min(600px, 56vw);
+  border: 0;
+}
+
+.cs-project-empty {
+  min-height: 380px;
+  background:
+    radial-gradient(circle at 78% 18%, var(--cs-color, var(--accent)), transparent 28%),
+    var(--surface2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2rem, 5vw, 4rem);
+  color: var(--cs-color, var(--accent));
+  padding: 48px;
+  text-align: center;
+}
+
+.cs-project-image:hover,
+.cs-project-video:hover {
   transform: scale(1.005);
 }
 
