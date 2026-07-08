@@ -1,10 +1,13 @@
 import express from "express";
 import nodemailer from "nodemailer";
 import rateLimit from "express-rate-limit";
+import dns from "node:dns/promises";
+import net from "node:net";
 import Message from "../models/Message.js";
 import { protect } from "../middleware/auth.js";
 
 const router = express.Router();
+const REQUIRED_EMAIL_ENV = ["SMTP_HOST", "SMTP_PORT", "SMTP_USER", "SMTP_PASS", "CONTACT_RECEIVER"];
 
 const escapeHtml = (value = "") =>
   String(value)
@@ -23,16 +26,59 @@ const contactLimiter = rateLimit({
   message: { success: false, message: "Too many requests. Please try again in 15 minutes." },
 });
 
-const createTransporter = () =>
-  nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: Number(process.env.SMTP_PORT),
-    secure: false,
+const parseSmtpPort = () => {
+  const port = Number(process.env.SMTP_PORT);
+  if (!Number.isInteger(port) || port <= 0 || port > 65535) {
+    throw new Error("SMTP_PORT must be a valid port number.");
+  }
+  return port;
+};
+
+const resolveSmtpHost = async (host) => {
+  if (process.env.SMTP_FORCE_IPV4 === "false" || net.isIP(host)) {
+    return { host };
+  }
+
+  try {
+    const [ipv4Address] = await dns.resolve4(host);
+    if (ipv4Address) {
+      return {
+        host: ipv4Address,
+        servername: host,
+      };
+    }
+  } catch (err) {
+    console.warn(`SMTP IPv4 lookup failed for ${host}; falling back to configured host:`, err.message);
+  }
+
+  return { host };
+};
+
+const createTransporter = async () => {
+  const missing = REQUIRED_EMAIL_ENV.filter((key) => !process.env[key]?.trim());
+  if (missing.length) {
+    throw new Error(`Email service is missing required configuration: ${missing.join(", ")}.`);
+  }
+
+  const smtpHost = process.env.SMTP_HOST.trim();
+  const smtpPort = parseSmtpPort();
+  const hostOptions = await resolveSmtpHost(smtpHost);
+
+  return nodemailer.createTransport({
+    ...hostOptions,
+    port: smtpPort,
+    secure: smtpPort === 465,
+    requireTLS: smtpPort === 587,
+    connectionTimeout: 15000,
+    greetingTimeout: 15000,
+    socketTimeout: 30000,
+    tls: hostOptions.servername ? { servername: hostOptions.servername } : undefined,
     auth: {
       user: process.env.SMTP_USER,
       pass: process.env.SMTP_PASS,
     },
   });
+};
 
 router.post("/", contactLimiter, async (req, res) => {
   try {
@@ -62,7 +108,7 @@ router.post("/", contactLimiter, async (req, res) => {
       ipAddress: req.ip,
     });
 
-    const transporter = createTransporter();
+    const transporter = await createTransporter();
     await transporter.sendMail({
       from: `"KARIN Website" <${process.env.SMTP_USER}>`,
       to: process.env.CONTACT_RECEIVER,
