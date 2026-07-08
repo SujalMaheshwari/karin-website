@@ -80,6 +80,52 @@ const createTransporter = async () => {
   });
 };
 
+const shouldRequireEmailDelivery = () => process.env.MAIL_DELIVERY_REQUIRED === "true";
+
+const sendContactEmails = async ({ cleanName, cleanEmail, safeName, safeEmail, safeMessage }) => {
+  const transporter = await createTransporter();
+
+  await transporter.sendMail({
+    from: `"KARIN Website" <${process.env.SMTP_USER}>`,
+    to: process.env.CONTACT_RECEIVER,
+    subject: `New enquiry from ${cleanName}`,
+    html: `
+      <div style="font-family:sans-serif;max-width:600px;margin:auto;padding:32px;border:1px solid #eee;border-radius:8px;">
+        <h2 style="color:#0b0c0e;margin-bottom:4px;">New Project Enquiry</h2>
+        <p style="color:#888;font-size:13px;margin-top:0;">KARIN Pvt. Ltd. - Contact Form</p>
+        <hr style="border:none;border-top:1px solid #eee;margin:24px 0;">
+        <p><strong>Name:</strong> ${safeName}</p>
+        <p><strong>Email:</strong> <a href="mailto:${safeEmail}">${safeEmail}</a></p>
+        <p><strong>Message:</strong></p>
+        <div style="background:#f9f9f9;padding:16px;border-radius:6px;color:#333;line-height:1.7;">
+          ${safeMessage}
+        </div>
+        <hr style="border:none;border-top:1px solid #eee;margin:24px 0;">
+        <p style="color:#aaa;font-size:12px;">Sent: ${new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })} IST</p>
+      </div>
+    `,
+  });
+
+  await transporter.sendMail({
+    from: `"KARIN Pvt. Ltd." <${process.env.SMTP_USER}>`,
+    to: cleanEmail,
+    subject: "We received your message - KARIN Pvt. Ltd.",
+    html: `
+      <div style="font-family:sans-serif;max-width:600px;margin:auto;padding:32px;border:1px solid #eee;border-radius:8px;">
+        <h2 style="color:#0b0c0e;">Thanks, ${safeName}!</h2>
+        <p style="color:#444;line-height:1.7;">
+          We've received your message and will get back to you within <strong>24 hours</strong>.
+        </p>
+        <p style="color:#444;line-height:1.7;">
+          In the meantime, feel free to reply to this email with any additional details.
+        </p>
+        <hr style="border:none;border-top:1px solid #eee;margin:24px 0;">
+        <p style="color:#888;font-size:13px;">KARIN Pvt. Ltd. - Bhopal, India - hello@karinpvt.in</p>
+      </div>
+    `,
+  });
+};
+
 router.post("/", contactLimiter, async (req, res) => {
   try {
     const { name, email, message } = req.body;
@@ -108,46 +154,18 @@ router.post("/", contactLimiter, async (req, res) => {
       ipAddress: req.ip,
     });
 
-    const transporter = await createTransporter();
-    await transporter.sendMail({
-      from: `"KARIN Website" <${process.env.SMTP_USER}>`,
-      to: process.env.CONTACT_RECEIVER,
-      subject: `New enquiry from ${cleanName}`,
-      html: `
-        <div style="font-family:sans-serif;max-width:600px;margin:auto;padding:32px;border:1px solid #eee;border-radius:8px;">
-          <h2 style="color:#0b0c0e;margin-bottom:4px;">New Project Enquiry</h2>
-          <p style="color:#888;font-size:13px;margin-top:0;">KARIN Pvt. Ltd. - Contact Form</p>
-          <hr style="border:none;border-top:1px solid #eee;margin:24px 0;">
-          <p><strong>Name:</strong> ${safeName}</p>
-          <p><strong>Email:</strong> <a href="mailto:${safeEmail}">${safeEmail}</a></p>
-          <p><strong>Message:</strong></p>
-          <div style="background:#f9f9f9;padding:16px;border-radius:6px;color:#333;line-height:1.7;">
-            ${safeMessage}
-          </div>
-          <hr style="border:none;border-top:1px solid #eee;margin:24px 0;">
-          <p style="color:#aaa;font-size:12px;">Sent: ${new Date().toLocaleString("en-IN", { timeZone: "Asia/Kolkata" })} IST</p>
-        </div>
-      `,
-    });
-
-    await transporter.sendMail({
-      from: `"KARIN Pvt. Ltd." <${process.env.SMTP_USER}>`,
-      to: cleanEmail,
-      subject: "We received your message - KARIN Pvt. Ltd.",
-      html: `
-        <div style="font-family:sans-serif;max-width:600px;margin:auto;padding:32px;border:1px solid #eee;border-radius:8px;">
-          <h2 style="color:#0b0c0e;">Thanks, ${safeName}!</h2>
-          <p style="color:#444;line-height:1.7;">
-            We've received your message and will get back to you within <strong>24 hours</strong>.
-          </p>
-          <p style="color:#444;line-height:1.7;">
-            In the meantime, feel free to reply to this email with any additional details.
-          </p>
-          <hr style="border:none;border-top:1px solid #eee;margin:24px 0;">
-          <p style="color:#888;font-size:13px;">KARIN Pvt. Ltd. - Bhopal, India - hello@karinpvt.in</p>
-        </div>
-      `,
-    });
+    try {
+      await sendContactEmails({ cleanName, cleanEmail, safeName, safeEmail, safeMessage });
+    } catch (emailErr) {
+      console.error(`Contact email delivery failed for message ${saved._id}:`, emailErr);
+      if (shouldRequireEmailDelivery()) {
+        return res.status(502).json({
+          success: false,
+          message: "Message saved, but email delivery failed. Please email us directly.",
+          id: saved._id,
+        });
+      }
+    }
 
     res.status(201).json({
       success: true,
